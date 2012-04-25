@@ -79,7 +79,7 @@ PRODUCT_PACKAGES += \
 
 # tvout
 PRODUCT_PACKAGES += \
-	P1Parts \
+#	P1Parts \
 	tvouthack
 
 # script to set bluetooth and wlan MAC addresses
