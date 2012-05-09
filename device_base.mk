@@ -23,7 +23,6 @@ DEVICE_PACKAGE_OVERLAYS := device/samsung/p1-common/overlay
 # These are the hardware-specific configuration files
 PRODUCT_COPY_FILES := \
 	device/samsung/p1-common/prebuilt/etc/asound.conf:system/etc/asound.conf \
-	device/samsung/p1-common/prebuilt/lib/egl/egl.cfg:system/lib/egl/egl.cfg \
 	device/samsung/p1-common/prebuilt/etc/bluetooth/main.conf:system/etc/bluetooth/main.conf
 
 # Init files
@@ -102,6 +101,7 @@ PRODUCT_COPY_FILES += \
         frameworks/base/data/etc/android.hardware.location.xml:system/etc/permissions/android.hardware.location.xml \
 	frameworks/base/data/etc/android.hardware.location.gps.xml:system/etc/permissions/android.hardware.location.gps.xml \
 	frameworks/base/data/etc/android.hardware.wifi.xml:system/etc/permissions/android.hardware.wifi.xml \
+	frameworks/base/data/etc/android.hardware.wifi.direct.xml:system/etc/permissions/android.hardware.wifi.direct.xml \
 	frameworks/base/data/etc/android.hardware.sensor.proximity.xml:system/etc/permissions/android.hardware.sensor.proximity.xml \
 	frameworks/base/data/etc/android.hardware.sensor.light.xml:system/etc/permissions/android.hardware.sensor.light.xml \
 	frameworks/base/data/etc/android.hardware.touchscreen.multitouch.jazzhand.xml:system/etc/permissions/android.hardware.touchscreen.multitouch.jazzhand.xml \
@@ -127,7 +127,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Note that the only such settings should be the ones that are too low-level to
 # be reachable from resources or other mechanisms.
 PRODUCT_PROPERTY_OVERRIDES += \
-       wifi.interface=eth0 \
+       wifi.interface=wlan0 \
        wifi.supplicant_scan_interval=45
 
 # enable Google-specific location features,
@@ -169,6 +169,8 @@ PRODUCT_COPY_FILES += \
 # bml_over_mtd
 PRODUCT_COPY_FILES += \
 	device/samsung/p1-common/bml_over_mtd.sh:bml_over_mtd.sh
+
+$(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4329/device-bcm.mk)
 
 # Set product characteristic to tablet, needed for some ui elements
 PRODUCT_CHARACTERISTICS := tablet
