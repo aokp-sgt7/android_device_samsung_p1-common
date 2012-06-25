@@ -2,7 +2,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="@string/category_radio_title">
+        android:title="@string/category_radio_title"
+        android:key="category_radio">
         <!-- UMTS/HSDPA/HSUPA settings -->
         <ListPreference
             android:key="hspa"
@@ -45,6 +46,7 @@
             android:key="buttons_disable"
             android:title="@string/capacitive_buttons_title"
             android:summary="@string/capacitive_buttons_summary"
+            android:disableDependentsState="true"
             android:defaultValue="false" />
             <!-- Touch key backlight timeout -->
             <ListPreference
@@ -53,7 +55,8 @@
                 android:summary="@string/backlight_timeout_summary_head"
                 android:entries="@array/backlight_timeout_entries"
                 android:entryValues="@array/backlight_timeout_entries_values"
-                android:defaultValue="1600" />
+                android:defaultValue="1600"
+                android:dependency="buttons_disable" />
     </PreferenceCategory>
 
 </PreferenceScreen>
