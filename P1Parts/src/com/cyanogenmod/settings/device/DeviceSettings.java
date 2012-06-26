@@ -23,9 +23,6 @@ public class DeviceSettings extends PreferenceActivity  {
     public static final String KEY_TVOUT_ENABLE = "tvout_enable";
     public static final String KEY_TVOUT_SYSTEM = "tvout_system";
     public static final String KEY_HDMI_ENABLE = "hdmi_enable";
-    public static final String KEY_BUTTONS_DISABLE = "buttons_disable";
-    public static final String KEY_BUTTONS = "buttons_category";
-    public static final String KEY_BACKLIGHT_TIMEOUT = "backlight_timeout";
 
     private ListPreference mHspa;
     private CheckBoxPreference mTvOutEnable;
@@ -34,8 +31,6 @@ public class DeviceSettings extends PreferenceActivity  {
     private TvOut mTvOut;
     private C30Observer	c30plug;
     private Activity	me;
-    private CheckBoxPreference mDisableButtons;
-    private ListPreference mBacklightTimeout;
 
     private boolean	mTVoutConnected = false;
     private boolean mHDMIConnected = false;
@@ -118,14 +113,6 @@ public class DeviceSettings extends PreferenceActivity  {
             }
 
         });
-
-        mDisableButtons = (CheckBoxPreference) findPreference(KEY_BUTTONS_DISABLE);
-        mDisableButtons.setEnabled(ToggleCapacitiveKeys.isSupported());
-        mDisableButtons.setOnPreferenceChangeListener(new ToggleCapacitiveKeys());
-
-        mBacklightTimeout = (ListPreference) findPreference(KEY_BACKLIGHT_TIMEOUT);
-        mBacklightTimeout.setEnabled(TouchKeyBacklightTimeout.isSupported());
-        mBacklightTimeout.setOnPreferenceChangeListener(new TouchKeyBacklightTimeout());
 
         c30plug = new C30Observer();
         

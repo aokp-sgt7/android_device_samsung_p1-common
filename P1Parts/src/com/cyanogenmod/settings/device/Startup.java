@@ -18,8 +18,6 @@ public class Startup extends BroadcastReceiver {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-        ToggleCapacitiveKeys.restore(context);
-        TouchKeyBacklightTimeout.restore(context);
     }
 
 }

@@ -39,24 +39,4 @@
             android:summaryOn="@string/hdmi_dock_summary_on"/>
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="@string/category_capacitive_buttons_title"
-        android:key="buttons_category">
-        <CheckBoxPreference
-            android:key="buttons_disable"
-            android:title="@string/capacitive_buttons_title"
-            android:summary="@string/capacitive_buttons_summary"
-            android:disableDependentsState="true"
-            android:defaultValue="false" />
-            <!-- Touch key backlight timeout -->
-            <ListPreference
-                android:key="backlight_timeout"
-                android:title="@string/backlight_timeout_title_head"
-                android:summary="@string/backlight_timeout_summary_head"
-                android:entries="@array/backlight_timeout_entries"
-                android:entryValues="@array/backlight_timeout_entries_values"
-                android:defaultValue="1600"
-                android:dependency="buttons_disable" />
-    </PreferenceCategory>
-
 </PreferenceScreen>

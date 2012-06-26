@@ -31,9 +31,5 @@
     <string name="hdmi_dock_summary">HDMI-dock verbonden, activeer om in te schakelen</string>
     <string name="hdmi_dock_summary_on">HDMI-dock ingeschakeld</string>
     <string name="hdmi_dock_head">HDMI-dock</string>
-    
-    <string name="category_capacitive_buttons_title">Capacitieve knoppen</string>
-    <string name="capacitive_buttons_title">Capacitieve knoppen</string>
-    <string name="capacitive_buttons_summary">Lichten en aanrakingen op vaste capacitieve knoppen uitschakelen (incl. meldingen)</string>
-
+   
 </resources>
