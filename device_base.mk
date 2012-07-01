@@ -153,6 +153,15 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.cwm.enable_key_repeat=true \
     ro.cwm.repeatable_keys=102,114,115,139
 
+# include device information for the About screen
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.device.cpu=1GHz Samsung-Intrinsity S5PC110 \
+    ro.device.gpu=PowerVR SGX 540 \
+    ro.device.rear_cam=3.1 MP \
+    ro.device.front_cam=1.3 MP \
+    ro.device.screen_res=1024x600
+
 # we have enough storage space to hold precise GC data
 PRODUCT_TAGS += dalvik.gc.type-precise
 
