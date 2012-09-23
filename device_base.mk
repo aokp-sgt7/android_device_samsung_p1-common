@@ -87,8 +87,8 @@ PRODUCT_PACKAGES += \
 	tvouthack
 
 # torch
-PRODUCT_PACKAGES += \
-	Torch
+#PRODUCT_PACKAGES += \
+#	Torch
 
 # Usb accessory
 PRODUCT_PACKAGES += \
