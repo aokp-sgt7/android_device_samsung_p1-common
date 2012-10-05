@@ -1,0 +1,9 @@
+#
+# hardware details for the p1 family
+#
+
+ro.device.cpu=1GHz Samsung-Intrinsity S5PC110
+ro.device.gpu=PowerVR SGX 540
+ro.device.rear_cam=3.1 MP
+ro.device.front_cam=1.3 MP
+ro.device.screen_res=1024x600

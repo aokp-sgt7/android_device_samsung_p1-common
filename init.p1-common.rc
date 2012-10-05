@@ -60,6 +60,10 @@ on post-fs-data
 
     setprop vold.post_fs_data_done 1
 
+    # alarm permissions (allows user to change the time)
+    chown system radio /dev/alarm
+    chmod 0664 /dev/alarm
+
 on boot
 
     # fake some battery state
