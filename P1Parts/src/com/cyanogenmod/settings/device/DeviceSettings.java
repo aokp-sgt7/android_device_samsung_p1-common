@@ -32,6 +32,7 @@ import android.os.IBinder;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.view.MenuItem;
 
 import com.cyanogenmod.settings.device.R;
 
@@ -51,6 +52,7 @@ public class DeviceSettings extends Activity {
     public static final String KEY_BACKLIGHT_TIMEOUT = "backlight_timeout";
     public static final String KEY_WIFI_PM = "wifi_pm";
     public static final String KEY_TOUCHSCREEN_CLOCK = "touchscreen_clock";
+    public static final String KEY_VIBRATOR_TUNING = "vibrator_tuning";
 
 
     ViewPager mViewPager;
@@ -68,6 +70,7 @@ public class DeviceSettings extends Activity {
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE, ActionBar.DISPLAY_SHOW_TITLE);
         bar.setTitle(R.string.app_name);
+        bar.setDisplayHomeAsUpEnabled(true);
 
         mTabsAdapter = new TabsAdapter(this, mViewPager);
         mTabsAdapter.addTab(bar.newTab().setText(R.string.category_buttons_title),
@@ -78,6 +81,8 @@ public class DeviceSettings extends Activity {
                 TVFragmentActivity.class, null);
         mTabsAdapter.addTab(bar.newTab().setText(R.string.category_wifi_title),
                 WifiFragmentActivity.class, null);
+        mTabsAdapter.addTab(bar.newTab().setText(R.string.category_vibrator_tuning_title),
+                VibratorFragmentActivity.class, null);
 
         if (savedInstanceState != null) {
             bar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));
@@ -165,6 +170,16 @@ public class DeviceSettings extends Activity {
 
         @Override
         public void onTabReselected(Tab tab, FragmentTransaction ft) {
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case android.R.id.home:
+            DeviceSettings.this.onBackPressed();
+        default:
+            return super.onOptionsItemSelected(item);
         }
     }
 }

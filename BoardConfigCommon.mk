@@ -66,6 +66,7 @@ endif
 BOARD_V4L2_DEVICE := /dev/video1
 BOARD_CAMERA_DEVICE := /dev/video0
 BOARD_SECOND_CAMERA_DEVICE := /dev/video2
+BOARD_CAMERA_HAVE_ISO := true
 
 # OpenGL stuff
 BOARD_EGL_CFG := device/samsung/p1-common/prebuilt/lib/egl/egl.cfg
@@ -98,6 +99,10 @@ TARGET_RECOVERY_PRE_COMMAND := "echo 1 > /cache/.startrecovery; sync;"
 BOARD_CUSTOM_GRAPHICS := ../../../device/samsung/p1-common/recovery/graphics.c
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/p1-common/recovery/keys.c
 BOARD_USES_BML_OVER_MTD := true
+
+# Samsung EMMC brick bug
+# Already disabled in kernel, but disable again for safety
+BOARD_SUPPRESS_EMMC_WIPE := true
 
 # MTP
 BOARD_MTP_DEVICE := "/dev/usb_mtp_gadget"

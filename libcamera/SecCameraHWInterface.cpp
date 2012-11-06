@@ -1,5 +1,4 @@
 /*
-**
 ** Copyright 2008, The Android Open Source Project
 ** Copyright 2010, Samsung Electronics Co. LTD
 ** Copyright 2011, The CyanogenMod Project
@@ -22,6 +21,7 @@
 #include <utils/Log.h>
 
 #include "SecCameraHWInterface.h"
+#include "SecCameraUtils.h"
 #include <utils/threads.h>
 #include <fcntl.h>
 #include <sys/mman.h>
@@ -271,8 +271,8 @@ void CameraHardwareSec::initDefaultParameters(int cameraId)
         parameterString.append(CameraParameters::SCENE_MODE_PARTY);
         parameterString.append(",");
         parameterString.append(CameraParameters::SCENE_MODE_CANDLELIGHT);
-        //p.set(CameraParameters::KEY_SUPPORTED_SCENE_MODES,
-        //      parameterString.string());
+        p.set(CameraParameters::KEY_SUPPORTED_SCENE_MODES,
+              parameterString.string());
         p.set(CameraParameters::KEY_SCENE_MODE,
               CameraParameters::SCENE_MODE_AUTO);
 
@@ -283,6 +283,10 @@ void CameraHardwareSec::initDefaultParameters(int cameraId)
         p.set(CameraParameters::KEY_PREVIEW_FPS_RANGE, "15000,30000");
 
         p.set(CameraParameters::KEY_FOCAL_LENGTH, "2.78");
+
+        // touch to focus
+        p.set(CameraParameters::KEY_MAX_NUM_FOCUS_AREAS, "1");
+        p.set(CameraParameters::KEY_FOCUS_AREAS, "(0,0,0,0,0)");
     } else {
         p.set(CameraParameters::KEY_SUPPORTED_PREVIEW_FPS_RANGE, "(7500,30000)");
         p.set(CameraParameters::KEY_PREVIEW_FPS_RANGE, "7500,30000");
@@ -319,7 +323,6 @@ void CameraHardwareSec::initDefaultParameters(int cameraId)
     ip.set("sharpness", SHARPNESS_DEFAULT);
     ip.set("contrast", CONTRAST_DEFAULT);
     ip.set("saturation", SATURATION_DEFAULT);
-    ip.set("iso", "auto");
     ip.set("metering", "center");
 
     ip.set("chk_dataline", 0);
@@ -327,6 +330,9 @@ void CameraHardwareSec::initDefaultParameters(int cameraId)
         ip.set("vtmode", 0);
         ip.set("blur", 0);
     }
+
+    p.set("iso-values", "auto,ISO100,ISO200,ISO400");
+    p.set("iso", "auto");
 
     p.set(CameraParameters::KEY_HORIZONTAL_VIEW_ANGLE, "51.2");
     p.set(CameraParameters::KEY_VERTICAL_VIEW_ANGLE, "39.4");
@@ -897,11 +903,6 @@ status_t CameraHardwareSec::autoFocus()
 status_t CameraHardwareSec::cancelAutoFocus()
 {
     ALOGV("%s :", __func__);
-
-    // If preview is not running, cancel autofocus can still be called.
-    // Since the camera subsystem is completely reset on preview start,
-    // cancel AF is a no-op.
-    if (!mPreviewRunning) return NO_ERROR;
 
     // cancelAutoFocus should be allowed after preview is started. But if
     // the preview is deferred, cancelAutoFocus will fail. Ignore it if that is
@@ -1631,6 +1632,35 @@ status_t CameraHardwareSec::setParameters(const CameraParameters& params)
         }
     }
 
+    // ISO
+    const char *new_iso_str = params.get("iso");
+    ALOGV("%s : new_iso_str %s", __func__, new_iso_str);
+    if (new_iso_str != NULL) {
+        int new_iso = -1;
+
+        if (!strcmp(new_iso_str, "auto")) {
+            new_iso = ISO_AUTO;
+        } else if (!strcmp(new_iso_str, "ISO100")) {
+            new_iso = ISO_100;
+        } else if (!strcmp(new_iso_str, "ISO200")) {
+            new_iso = ISO_200;
+        } else if (!strcmp(new_iso_str, "ISO400")) {
+            new_iso = ISO_400;
+        } else {
+            ALOGE("ERR(%s):Invalid iso value(%s)", __func__, new_iso_str);
+            ret = UNKNOWN_ERROR;
+        }
+
+        if (0 <= new_iso) {
+            if (mSecCamera->setISO(new_iso) < 0) {
+                ALOGE("ERR(%s):Fail on mSecCamera->setISO(new_iso(%d))", __func__, new_iso);
+                ret = UNKNOWN_ERROR;
+            } else {
+                mParameters.set("iso", new_iso_str);
+            }
+        }
+    }
+
     // whitebalance
     const char *new_white_str = params.get(CameraParameters::KEY_WHITE_BALANCE);
     ALOGV("%s : new_white_str %s", __func__, new_white_str);
@@ -1641,7 +1671,7 @@ status_t CameraHardwareSec::setParameters(const CameraParameters& params)
             new_white = WHITE_BALANCE_AUTO;
         else if (!strcmp(new_white_str,
                          CameraParameters::WHITE_BALANCE_DAYLIGHT))
-            new_white = WHITE_BALANCE_SUNNY;
+            new_white = WHITE_BALANCE_DAYLIGHT;
         else if (!strcmp(new_white_str,
                          CameraParameters::WHITE_BALANCE_CLOUDY_DAYLIGHT))
             new_white = WHITE_BALANCE_CLOUDY_DAYLIGHT;
@@ -1650,7 +1680,7 @@ status_t CameraHardwareSec::setParameters(const CameraParameters& params)
             new_white = WHITE_BALANCE_FLUORESCENT;
         else if (!strcmp(new_white_str,
                          CameraParameters::WHITE_BALANCE_INCANDESCENT))
-            new_white = WHITE_BALANCE_TUNGSTEN;
+            new_white = WHITE_BALANCE_INCANDESCENT;
         else {
             ALOGE("ERR(%s):Invalid white balance(%s)", __func__, new_white_str); //twilight, shade, warm_flourescent
             ret = UNKNOWN_ERROR;
@@ -1848,6 +1878,34 @@ status_t CameraHardwareSec::setParameters(const CameraParameters& params)
                 mParameters.set(CameraParameters::KEY_SCENE_MODE, new_scene_mode_str);
             }
         }
+
+        // touch to focus
+        const char *new_focus_area = params.get(CameraParameters::KEY_FOCUS_AREAS);
+        if (new_focus_area != NULL) {
+            ALOGV("focus area: %s", new_focus_area);
+            SecCameraArea area(new_focus_area);
+
+            if (!area.isDummy()) {
+                int width, height, frame_size;
+                mSecCamera->getPreviewSize(&width, &height, &frame_size);
+
+                int x = area.getX(width);
+                int y = area.getY(height);
+
+                ALOGV("area=%s, x=%i, y=%i", area.toString8().string(), x, y);
+                if (mSecCamera->setObjectPosition(x, y) < 0) {
+                    ALOGE("ERR(%s):Fail on mSecCamera->setObjectPosition(%s)", __func__, new_focus_area);
+                    ret = UNKNOWN_ERROR;
+                }
+            }
+
+            int val = area.isDummy() ? 0 : 1;
+            if (mSecCamera->setTouchAFStartStop(val) < 0) {
+                ALOGE("ERR(%s):Fail on mSecCamera->setTouchAFStartStop(%d)", __func__, val);
+                ret = UNKNOWN_ERROR;
+            }
+        }
+
     } else {
         if (!isSupportedParameter(new_focus_mode_str,
                     mParameters.get(CameraParameters::KEY_SUPPORTED_FOCUS_MODES))) {
@@ -1870,8 +1928,6 @@ status_t CameraHardwareSec::setParameters(const CameraParameters& params)
             new_image_effect = IMAGE_EFFECT_BNW;
         else if (!strcmp(new_image_effect_str, CameraParameters::EFFECT_SEPIA))
             new_image_effect = IMAGE_EFFECT_SEPIA;
-        else if (!strcmp(new_image_effect_str, CameraParameters::EFFECT_AQUA))
-            new_image_effect = IMAGE_EFFECT_AQUA;
         else if (!strcmp(new_image_effect_str, CameraParameters::EFFECT_NEGATIVE))
             new_image_effect = IMAGE_EFFECT_NEGATIVE;
         else {
