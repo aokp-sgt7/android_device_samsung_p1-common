@@ -35,6 +35,7 @@ on post-fs
     # now that all filesystems are mounted, load device specific kernel modules
     insmod /system/lib/modules/vibrator.ko   # vibrator
     insmod /system/lib/modules/bthid.ko      # bthid
+    insmod /system/lib/modules/bcmdhd.ko     # wifi
 
 on post-fs-data
 

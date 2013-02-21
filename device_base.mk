@@ -189,6 +189,10 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
 	libnetcmdiface
 
+# bootanimation
+PRODUCT_COPY_FILES +=  \
+    vendor/aokp/prebuilt/bootanimation/bootanimation_600_1024.zip:system/media/bootanimation.zip
+
 $(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4329/device-bcm.mk)
 
 # Set product characteristic to tablet, needed for some ui elements
