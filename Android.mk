@@ -1,3 +1,8 @@
-ifneq ($(filter p1 p1c p1l p1n,$(TARGET_DEVICE)),)
+ifeq ($(TARGET_DEVICE),p1)
     include $(all-subdir-makefiles)
 endif
+
+ifeq ($(TARGET_DEVICE),p1c)
+    include $(all-subdir-makefiles)
+endif
+
