@@ -17,6 +17,10 @@
 # application settings that are stored in resourced.
 DEVICE_PACKAGE_OVERLAYS := device/samsung/p1-common/overlay
 
+# Bootanimation
+TARGET_SCREEN_HEIGHT := 1024
+TARGET_SCREEN_WIDTH := 600
+
 # These are the hardware-specific configuration files
 PRODUCT_COPY_FILES := \
 	device/samsung/p1-common/prebuilt/etc/asound.conf:system/etc/asound.conf
@@ -185,19 +189,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
 	libnetcmdiface
 
-# Bootanimation
-TARGET_SCREEN_HEIGHT := 1024
-TARGET_SCREEN_WIDTH := 600
-
-# bootanimation
-PRODUCT_COPY_FILES +=  \
-    vendor/aokp/prebuilt/bootanimation/bootanimation_600_1024.zip:system/media/bootanimation.zip
-
-# Galaxy Tab uses high-density artwork where available
-PRODUCT_LOCALES += hdpi
-
-# Screen size is "large" 7'tablet, density is "hdpi"
-PRODUCT_AAPT_CONFIG := large hdpi
+$(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4329/device-bcm.mk)
 
 # Set product characteristic to tablet, needed for some ui elements
 PRODUCT_CHARACTERISTICS := tablet

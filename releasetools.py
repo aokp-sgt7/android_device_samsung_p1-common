@@ -22,7 +22,7 @@ import shutil
 LOCAL_DIR = os.path.dirname(os.path.abspath(__file__))
 TARGET_DIR = os.getenv('OUT')
 UTILITIES_DIR = os.path.join(TARGET_DIR, 'utilities')
-TARGET_DEVICE = os.getenv('AOKP_BUILD')
+TARGET_DEVICE = os.getenv('AOKP_PRODUCT')
 
 def FullOTA_Assertions(info):
   if TARGET_DEVICE == "p1":
