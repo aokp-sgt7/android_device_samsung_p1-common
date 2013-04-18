@@ -174,6 +174,10 @@ include frameworks/native/build/phone-hdpi-512-dalvik-heap.mk
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 	persist.sys.usb.config=mass_storage
 
+# enable ADB security features (shows a dialog before it allows ADB connections from unknown devices)
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+	ro.adb.secure=1
+
 # installer
 PRODUCT_COPY_FILES += \
 	device/samsung/p1-common/updater.sh:updater.sh
