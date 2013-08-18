@@ -106,7 +106,6 @@ RECOVERY_TOUCHSCREEN_FLIP_X     := true
 TW_NO_EXFAT                     := true
 TW_NO_REBOOT_BOOTLOADER         := true
 TW_NO_REBOOT_RECOVERY           := true
-TW_INCLUDE_INJECTTWRP           := false
 TW_MAX_BRIGHTNESS               := 255
 TW_BRIGHTNESS_PATH              := /sys/devices/platform/s3cfb/cmc623_pwm_bl/backlight/s5p_bl/brightness
 TW_USE_MODEL_HARDWARE_ID_FOR_DEVICE_ID := true
