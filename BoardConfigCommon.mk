@@ -131,3 +131,6 @@ BOARD_ALLOW_EGL_HIBERNATION := true
 
 # hwcomposer: custom vsync ioctl
 BOARD_CUSTOM_VSYNC_IOCTL := true
+
+# Dalvik startup with a low memory footprint
+TARGET_ARCH_LOWMEM := true
