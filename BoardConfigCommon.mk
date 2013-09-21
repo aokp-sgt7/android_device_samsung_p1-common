@@ -89,6 +89,22 @@ BOARD_VOLD_EMMC_SHARES_DEV_MAJOR := true
 # Releasetools
 TARGET_RELEASETOOLS_EXTENSIONS := device/samsung/p1-common
 
+# TWRP
+HAVE_SELINUX                    := true
+TARGET_RECOVERY_PIXEL_FORMAT    := "RGB_565"
+DEVICE_RESOLUTION               := 1024x600
+BOARD_HAS_FLIPPED_SCREEN        := true
+RECOVERY_TOUCHSCREEN_FLIP_Y     := true
+RECOVERY_TOUCHSCREEN_FLIP_X     := true
+TW_NO_REBOOT_BOOTLOADER         := true
+TW_NO_REBOOT_RECOVERY           := true
+TW_NO_EXFAT                     := true
+TW_INCLUDE_INJECTTWRP           := true
+TW_MAX_BRIGHTNESS               := 255
+TW_BRIGHTNESS_PATH              := /sys/devices/platform/s3cfb/cmc623_pwm_bl/backlight/s5p_bl/brightness
+TW_USE_MODEL_HARDWARE_ID_FOR_DEVICE_ID := true
+BOARD_USE_CUSTOM_RECOVERY_FONT  := \"roboto_10x18.h\"
+
 # Recovery
 TARGET_USERIMAGES_USE_EXT4 := true
 BOARD_HAS_NO_SELECT_BUTTON := true
